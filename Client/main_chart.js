@@ -61,7 +61,7 @@ xhr.send();
 
 //Function to execute on page load
 AmCharts.ready(function() {
-    generateChartData(chart);
+    // generateChartData(chart);
     createStockChart(chart);
 });
 
@@ -89,9 +89,10 @@ function createStockChart() {
     {
         fromField: "volume",
         toField: "volume"},
-        {
+    {
             fromField: "trend",
             toField: "trend"}];
+
     dataSet1.dataProvider = chartData1;
     dataSet1.categoryField = "date";
 
@@ -146,7 +147,7 @@ function createStockChart() {
     var stockPanel1 = new AmCharts.StockPanel();
     stockPanel1.showCategoryAxis = false;
     stockPanel1.title = "Price in Dollars";
-    stockPanel1.percentHeight = 100;
+    stockPanel1.percentHeight = 60;
     stockPanel1.recalculateToPercents="never";
 
     // graph of first stock panel
@@ -163,7 +164,7 @@ function createStockChart() {
     // second stock panel
     var stockPanel2 = new AmCharts.StockPanel();
     stockPanel2.title = "Prediction Difference";
-    stockPanel2.percentHeight = 50;
+    stockPanel2.percentHeight = 40;
     var graph2 = new AmCharts.StockGraph();
     graph2.valueField = "volume";
     graph2.type = "smoothedLine";
@@ -174,7 +175,7 @@ function createStockChart() {
 
     var stockPanel3 = new AmCharts.StockPanel();
     stockPanel3.title = "Trend Accuracy";
-    stockPanel3.percentHeight = 50;
+    stockPanel3.percentHeight = 40;
     var graph3 = new AmCharts.StockGraph();
     graph3.valueField = "trend";
     graph3.type = "column";
