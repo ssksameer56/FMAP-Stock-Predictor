@@ -190,7 +190,7 @@ function createStockChart() {
     // OTHER SETTINGS ////////////////////////////////////
     var sbsettings = new AmCharts.ChartScrollbarSettings();
     sbsettings.graph = graph1;
-    sbsettings.usePeriod = "WW";
+    sbsettings.usePeriod = "DD";
     chart.chartScrollbarSettings = sbsettings;
 
 
