@@ -146,7 +146,7 @@ function createStockChart() {
     var stockPanel1 = new AmCharts.StockPanel();
     stockPanel1.showCategoryAxis = false;
     stockPanel1.title = "Price in Dollars";
-    stockPanel1.percentHeight = 60;
+    stockPanel1.percentHeight = 100;
     stockPanel1.recalculateToPercents="never";
 
     // graph of first stock panel
@@ -163,7 +163,7 @@ function createStockChart() {
     // second stock panel
     var stockPanel2 = new AmCharts.StockPanel();
     stockPanel2.title = "Prediction Difference";
-    stockPanel2.percentHeight = 40;
+    stockPanel2.percentHeight = 50;
     var graph2 = new AmCharts.StockGraph();
     graph2.valueField = "volume";
     graph2.type = "smoothedLine";
@@ -174,7 +174,7 @@ function createStockChart() {
 
     var stockPanel3 = new AmCharts.StockPanel();
     stockPanel3.title = "Trend Accuracy";
-    stockPanel2.percentHeight = 40;
+    stockPanel3.percentHeight = 50;
     var graph3 = new AmCharts.StockGraph();
     graph3.valueField = "trend";
     graph3.type = "column";
@@ -197,15 +197,16 @@ function createStockChart() {
     // PERIOD SELECTOR ///////////////////////////////////
     var periodSelector = new AmCharts.PeriodSelector();
     periodSelector.position = "left";
-    periodSelector.periods = [{
+    periodSelector.periods = [    {
+            period: "HH",
+            selected: true,
+            count: 5,
+            label: "5 hour"},
+     {
         period: "DD",
         count: 10,
         label: "10 days"},
-    {
-        period: "HH",
-        selected: true,
-        count: 5,
-        label: "5 hour"},
+
     {
         period: "MM",
         count: 1,
@@ -223,7 +224,9 @@ function createStockChart() {
     // DATA SET SELECTOR
     var dataSetSelector = new AmCharts.DataSetSelector();
     dataSetSelector.position = "left";
+    dataSetSelector.selectText = "Select Stock or Prediction";
     chart.dataSetSelector = dataSetSelector;
+
 
     chart.addListener("rendered", function(event) {
         chart.mouseDown = false;
@@ -299,8 +302,8 @@ function getnewdata(chart){
                 chart.validateData();
                 index++;
                 var newStartDate = new Date(chart.startDate.getTime());
-                newStartDate.setDate(newStartDate.getDate() + 1);
-                var newEndDate = new Date(chart.endDate.getTime() + 3);
+                newStartDate.setDate(newStartDate.getDate());
+                var newEndDate = new Date(chart.endDate.getTime());
                 newEndDate.setDate(newEndDate.getDate());
                 chart.zoom(newStartDate, newEndDate);
 
