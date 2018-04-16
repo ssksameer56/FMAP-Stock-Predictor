@@ -9,7 +9,7 @@ chart = new AmCharts.AmStockChart();
 //Function to load initial data after page loads
 function generateChartData(chart){
     var firstDate = new Date();
-    firstDate.setDate(firstDate.getDate() - 21);
+    firstDate.setDate(firstDate.getDate() - 500);
     firstDate.setHours(0, 0, 0, 0);
         //console.log(index);
         var val = null;
@@ -24,34 +24,35 @@ function generateChartData(chart){
                 console.log(i);
                  var newDate = new Date(firstDate);
                  var newDate2 = new Date(firstDate);
-                 newDate.setDate(newDate.getDate());
-                 newDate2.setDate(newDate.getDate());
-                 newDate.setHours(i,0,0,0);
-                 newDate2.setHours(i+1,0,0,0);
+                // console.log(newDate, newDate2);
+                 newDate.setDate(newDate.getDate() + i);
+                 newDate2.setDate(newDate2.getDate() + i);
+                 newDate.setHours(0, 0, 0, 0);
+                 newDate2.setHours(0,0,0,0);
                  console.log(newDate, newDate2);
                 chartData1.push({
                     date: newDate2,
-                    value: vals.actualDataStock2[i],
-                    volume: vals.percentChange[i],
-                    trend: vals.isCorrectlyPredicted[i]
+                    value: vals.predictedDataStock1[i],
+                    volume: vals.percentChangeStock1[i],
+                    trend: vals.isCorrectlyPredictedStock1[i]
                 });
                 chartData2.push({
                     date: newDate,
-                    value: vals.actualDataStock2[i],
-                    volume: vals.percentChange[i],
-                    trend: vals.isCorrectlyPredicted[i]
+                    value: vals.actualDataStock1[i],
+                    volume: vals.percentChangeStock1[i],
+                    trend: vals.isCorrectlyPredictedStock1[i]
                 });
                 chartData3.push({
                     date: newDate2,
-                    value: vals.actualDataStock2[i],
-                    volume: vals.percentChange[i],
-                    trend: vals.isCorrectlyPredicted[i]
+                    value: vals.predictedDataStock2[i],
+                    volume: vals.percentChangeStock2[i],
+                    trend: vals.isCorrectlyPredictedStock2[i]
                 });
                 chartData4.push({
                     date: newDate,
                     value: vals.actualDataStock2[i],
-                    volume: vals.percentChange[i],
-                    trend: vals.isCorrectlyPredicted[i]
+                    volume: vals.percentChangeStock2[i],
+                    trend: vals.isCorrectlyPredictedStock2[i]
                 });
     }
 }
@@ -61,12 +62,12 @@ xhr.send();
 
 //Function to execute on page load
 AmCharts.ready(function() {
-    // generateChartData(chart);
+    generateChartData(chart);
     createStockChart(chart);
 });
 
 //Makes repeat AJAX Calls to server to fetch new data
-setInterval(function(){ getnewdata(chart);},5000);
+setInterval(function(){ getnewdata(chart);},3000);
 
 //Creates actual stock chart from the ojects
 function createStockChart() {
@@ -145,7 +146,7 @@ function createStockChart() {
     // PANELS ///////////////////////////////////////////
     // first stock panel
     var stockPanel1 = new AmCharts.StockPanel();
-    stockPanel1.showCategoryAxis = false;
+    stockPanel1.showCategoryAxis = true;
     stockPanel1.title = "Price in Dollars";
     stockPanel1.percentHeight = 60;
     stockPanel1.recalculateToPercents="never";
@@ -191,7 +192,7 @@ function createStockChart() {
     // OTHER SETTINGS ////////////////////////////////////
     var sbsettings = new AmCharts.ChartScrollbarSettings();
     sbsettings.graph = graph1;
-    sbsettings.usePeriod = "DD";
+    sbsettings.usePeriod = "WW";
     chart.chartScrollbarSettings = sbsettings;
 
 
@@ -265,47 +266,51 @@ function getnewdata(chart){
         xhr.onload = function() {
         if (xhr.status === 200) {
         vals =  JSON.parse(xhr.responseText);
-        console.log(vals);
                 var newDate = new Date(chartData1[chartData1.length - 1].date);
-                newDate.setDate(newDate.getDate() + 1);
-                // if ( chart.mouseDown )
+                var newDate2 = new Date(chartData1[chartData1.length - 1].date);
+                newDate.setHours(0,0,0,0);
+                newDate2.setHours(0,0,0,0);
+                newDate.setDate(newDate.getDate());
+                newDate2.setDate(newDate2.getDate() + 1);
+                                // if ( chart.mouseDown )
         //         //     return;
                  var i = chartData1.length;
-        // //        console.log(index);
+                 console.log('dsd' + vals + newDate + newDate2);
+                console.log(index);
                 chart.dataSets[0].dataProvider.push({
-                    date: newDate,
-                    value: vals.predictedDataStock1,
-                    volume: Number(vals.percentChange),
-                    trend: Number(vals.isCorrectlyPredicted*100)
+                    date: newDate2,
+                    value: Number(vals.predictedDataStock1),
+                    volume: Number(vals.percentChangeStock1),
+                    trend: Number(vals.isCorrectlyPredictedStock1*100)
                 });
                 console.log(Number(vals.predictedDataStock1));
                 chart.dataSets[1].dataProvider.push({
-                    date: newDate + 3,
-                    value: vals.actualDataStock1,
-                    volume: Number(vals.percentChange),
-                    trend: Number(vals.isCorrectlyPredicted*100)
+                    date: newDate,
+                    value: Number(vals.actualDataStock1),
+                    volume: Number(vals.percentChangeStock1),
+                    trend: Number(vals.isCorrectlyPredictedStock1*100)
                 });
                 console.log('two');
                 chart.dataSets[2].dataProvider.push({
-                    date: newDate,
-                    value: vals.predictedDataStock2,
-                    volume: Number(val.spercentChange),
-                    trend: Number(vals.isCorrectlyPredicted*100)
+                    date: newDate2,
+                    value: Number(vals.predictedDataStock2),
+                    volume: Number(vals.percentChangeStock2),
+                    trend: Number(vals.isCorrectlyPredictedStock2*100)
                 });
                 console.log(vals.isCorrectlyPredicted*100);
                 chart.dataSets[3].dataProvider.push({
-                    date: newDate + 3,
-                    value: vals.actualDataStock2,
-                    volume: Number(vals.percentChange),
-                    trend: Number(vals.actualDataStock2*100)
+                    date: newDate,
+                    value: Number(vals.actualDataStock2),
+                    volume: Number(vals.percentChangeStock2),
+                    trend: Number(vals.isCorrectlyPredictedStock2*100)
                 });
                 console.log(vals.isCorrectlyPredicted*100);
                 chart.validateData();
                 index++;
                 var newStartDate = new Date(chart.startDate.getTime());
-                newStartDate.setDate(newStartDate.getDate());
+                newStartDate.setDate(newStartDate.getDate()+ 2);
                 var newEndDate = new Date(chart.endDate.getTime());
-                newEndDate.setDate(newEndDate.getDate());
+                newEndDate.setDate(newEndDate.getDate() + 2);
                 chart.zoom(newStartDate, newEndDate);
 
         }
