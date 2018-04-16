@@ -10,6 +10,7 @@ CORS(app)
 
 @app.route('/getdata')
 def hello_world():
+    i = request.args.get('i')
     return str(random.randint(1,4000))
 
 @app.route('/getInitial')
