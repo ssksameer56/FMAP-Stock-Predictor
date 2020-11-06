@@ -4,6 +4,7 @@ python -m flask run
 """
 # Import
 import tensorflow as tf
+import tensorflow.compat.v1 as tfc
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
@@ -17,7 +18,6 @@ CORS(app)
 
 # Import data
 data = pd.read_csv('data/AmericanAirlines.csv')
-print data.head(10)
 
 # Drop date variable
 data = data.drop(['DATE'], 1)
@@ -59,15 +59,16 @@ n_neurons_3 = 256
 n_neurons_4 = 128
 
 # Session
-net = tf.InteractiveSession()
+net = tfc.InteractiveSession()
 
 # Placeholder
-X = tf.placeholder(dtype=tf.float32, shape=[None, n_stocks])
-Y = tf.placeholder(dtype=tf.float32, shape=[None])
+tf.compat.v1.disable_eager_execution()
+X = tfc.placeholder(dtype=tf.float32, shape=[None, n_stocks])
+Y = tfc.placeholder(dtype=tf.float32, shape=[None])
 
 # Initializers
 sigma = 1
-weight_initializer = tf.variance_scaling_initializer(mode="fan_avg", distribution="uniform", scale=sigma)
+weight_initializer = tfc.variance_scaling_initializer(mode="fan_avg", distribution="uniform", scale=sigma)
 bias_initializer = tf.zeros_initializer()
 
 # Hidden weights
@@ -94,13 +95,13 @@ hidden_4 = tf.nn.relu(tf.add(tf.matmul(hidden_3, W_hidden_4), bias_hidden_4))
 out = tf.transpose(tf.add(tf.matmul(hidden_4, W_out), bias_out))
 
 # Cost function
-mse = tf.reduce_mean(tf.squared_difference(out, Y))
+mse = tf.reduce_mean(tfc.squared_difference(out, Y))
 
 # Optimizer
-opt = tf.train.AdamOptimizer().minimize(mse)
+opt = tfc.train.AdamOptimizer().minimize(mse)
 
 # Init
-net.run(tf.global_variables_initializer())
+net.run(tfc.global_variables_initializer())
 
 # Setup plot
 plt.ion()
@@ -136,11 +137,10 @@ for e in range(epochs):
 
         # Show progress
         if np.mod(i, 50) == 0:
-	    correct = 0
-            # MSE train and test
-            mse_train.append(net.run(mse, feed_dict={X: X_train, Y: y_train}))
-            mse_test.append(net.run(mse, feed_dict={X: X_test, Y: y_test}))
-            print('MSE Train: ', mse_train[-1])
+           	# MSE train and test
+	        mse_train.append(net.run(mse, feed_dict={X: X_train, Y: y_train}))
+	        mse_test.append(net.run(mse, feed_dict={X: X_test, Y: y_test}))
+	        print('MSE Train: ', mse_train[-1])
             #print('MSE Test: ', mse_test[-1])
             # Prediction
             #pred = net.run(out, feed_dict={X: X_test})
@@ -194,7 +194,7 @@ def sendupdate():
 	initialData2 = {}
 	index = int(request.args.get('i'))
 	pred = net.run(out, feed_dict={X: X_test})
-	print index
+	print(index)
 	if(pred[0][index] > X_test[index][4]):
 		trend = 1
 	else:
@@ -203,7 +203,7 @@ def sendupdate():
 		isCorrectlyPredicted = 1
 	else:
 		isCorrectlyPredicted = -1
-	print	str(pred[0][index])
+	print(str(pred[0][index]))
 	#return "Predicted " + str(pred[0][index]) + " Actual " +str(y_test[index]) + "Previous stock value " + str(X_test[index][4]) + " Trend " + str(trend) + " isCorrectlyPredicted " + str(isCorrectlyPredicted)
 	initialData2['predictedDataStock1'] = str(pred[0][index])
 	initialData2['actualDataStock1'] = str(X_test[index][4])

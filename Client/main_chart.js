@@ -14,7 +14,7 @@ function generateChartData(chart){
         //console.log(index);
         var val = null;
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://192.168.43.164:5000/getInitial', false);
+        xhr.open('GET', 'http://192.168.1.101:5000/getInitial', false);
         xhr.onload = function() {
         if (xhr.status === 200) {
          vals =  JSON.parse(xhr.responseText);
@@ -33,26 +33,26 @@ function generateChartData(chart){
                 chartData1.push({
                     date: newDate2,
                     value: vals.predictedDataStock1[i],
-                    volume: vals.percentChangeStock1[i],
-                    trend: vals.isCorrectlyPredictedStock1[i]
+                    volume: vals.percentChange[i],
+                    trend: vals.isCorrectlyPredicted[i]
                 });
                 chartData2.push({
                     date: newDate,
                     value: vals.actualDataStock1[i],
-                    volume: vals.percentChangeStock1[i],
-                    trend: vals.isCorrectlyPredictedStock1[i]
+                    volume: vals.percentChange[i],
+                    trend: vals.isCorrectlyPredicted[i]
                 });
                 chartData3.push({
                     date: newDate2,
                     value: vals.predictedDataStock2[i],
-                    volume: vals.percentChangeStock2[i],
-                    trend: vals.isCorrectlyPredictedStock2[i]
+                    volume: vals.percentChange[i],
+                    trend: vals.isCorrectlyPredicted[i]
                 });
                 chartData4.push({
                     date: newDate,
                     value: vals.actualDataStock2[i],
-                    volume: vals.percentChangeStock2[i],
-                    trend: vals.isCorrectlyPredictedStock2[i]
+                    volume: vals.percentChange[i],
+                    trend: vals.isCorrectlyPredicted[i]
                 });
     }
 }
@@ -262,7 +262,7 @@ function getnewdata(chart){
         //console.log(index);
         var val = null;
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://192.168.43.164:5000/getUpdate?i='+index, true);
+        xhr.open('GET', 'http://192.168.1.101:5000/getUpdate?i='+index, true);
         xhr.onload = function() {
         if (xhr.status === 200) {
         vals =  JSON.parse(xhr.responseText);
@@ -280,29 +280,29 @@ function getnewdata(chart){
                 chart.dataSets[0].dataProvider.push({
                     date: newDate2,
                     value: Number(vals.predictedDataStock1),
-                    volume: Number(vals.percentChangeStock1),
-                    trend: Number(vals.isCorrectlyPredictedStock1*100)
+                    volume: Number(vals.percentChange),
+                    trend: Number(vals.isCorrectlyPredicted*100)
                 });
                 console.log(Number(vals.predictedDataStock1));
                 chart.dataSets[1].dataProvider.push({
                     date: newDate,
                     value: Number(vals.actualDataStock1),
-                    volume: Number(vals.percentChangeStock1),
-                    trend: Number(vals.isCorrectlyPredictedStock1*100)
+                    volume: Number(vals.percentChange),
+                    trend: Number(vals.isCorrectlyPredicted*100)
                 });
                 console.log('two');
                 chart.dataSets[2].dataProvider.push({
                     date: newDate2,
                     value: Number(vals.predictedDataStock2),
-                    volume: Number(vals.percentChangeStock2),
-                    trend: Number(vals.isCorrectlyPredictedStock2*100)
+                    volume: Number(vals.percentChange),
+                    trend: Number(vals.isCorrectlyPredicted*100)
                 });
                 console.log(vals.isCorrectlyPredicted*100);
                 chart.dataSets[3].dataProvider.push({
                     date: newDate,
                     value: Number(vals.actualDataStock2),
-                    volume: Number(vals.percentChangeStock2),
-                    trend: Number(vals.isCorrectlyPredictedStock2*100)
+                    volume: Number(vals.percentChange),
+                    trend: Number(vals.isCorrectlyPredicted*100)
                 });
                 console.log(vals.isCorrectlyPredicted*100);
                 chart.validateData();
